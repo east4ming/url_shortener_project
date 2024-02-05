@@ -57,3 +57,18 @@ def get_db_url_by_secret_key(db: Session, secret_key: str) -> models.URL:
         .filter(models.URL.secret_key == secret_key, models.URL.is_active)
         .first()
     )
+
+
+def update_db_clicks(db: Session, db_url: schemas.URL) -> models.URL:
+    """
+    更新URL对象的clicks属性
+    :param db: 数据库会话对象
+    :param db_url: 传入的URL对象
+    :return: 更新后的URL对象
+    """
+    # 更新URL对象的clicks属性
+    db_url.clicks += 1
+    # 提交数据库的更改
+    db.commit()
+    db.refresh(db_url)
+    return db_url

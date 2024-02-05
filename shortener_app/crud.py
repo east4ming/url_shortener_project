@@ -72,3 +72,21 @@ def update_db_clicks(db: Session, db_url: schemas.URL) -> models.URL:
     db.commit()
     db.refresh(db_url)
     return db_url
+
+
+def deactivate_db_url_by_secret_key(db: Session, secret_key: str) -> models.URL:
+    """
+    通过传入的secret_key将URL对象的is_active属性设置为False
+    :param db: 数据库会话对象
+    :param secret_key: 传入的secret_key
+    :return: 更新后的URL对象
+    """
+    # 通过传入的secret_key获取URL对象)
+    db_url = get_db_url_by_secret_key(db, secret_key)
+    if db_url:
+        # 将URL对象的is_active属性设置为False
+        db_url.is_active = False
+        # 提交数据库的更改
+        db.commit()
+        db.refresh(db_url)
+    return db_url

@@ -144,3 +144,18 @@ def get_url_info(secret_key: str, request: Request, db: Session = Depends(get_db
         return get_admin_info(db_url)
     else:
         raise_not_found(request)
+
+
+@app.delete("/admin/{secret_key}")
+def delete_url(secret_key: str, request: Request, db: Session = Depends(get_db)):
+    """
+    删除URL
+    Args:
+        secret_key (str): URL的secret_key
+        request (Request): 请求对象
+        db (Session): 数据库会话对象
+    """
+    if db_url := crud.deactivate_db_url_by_secret_key(db, secret_key):
+        return {"detail": f"URL '{db_url.target_url}' deleted."}
+    else:
+        raise_not_found(request)

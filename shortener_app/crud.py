@@ -42,3 +42,18 @@ def get_db_url_by_key(db: Session, url_key: str) -> models.URL:
     )
     # 返回db_url对象
     return db_url
+
+
+def get_db_url_by_secret_key(db: Session, secret_key: str) -> models.URL:
+    """
+    通过传入的secret_key获取URL对象
+    :param db: 数据库会话对象
+    :param secret_key: 传入的secret_key
+    :return: 获取到的URL对象
+    """
+    # 通过传入的secret_key获取URL对象
+    return (
+        db.query(models.URL)
+        .filter(models.URL.secret_key == secret_key, models.URL.is_active)
+        .first()
+    )
